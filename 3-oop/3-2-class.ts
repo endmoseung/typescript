@@ -15,6 +15,7 @@
     } //클래스를 가지고 인스턴스를 만들때 항상 호출되는 함수
 
     static makeMachine(coffeeBeans: number): CoffeeMaker {
+      //이렇게 직접 만들어 줄수도 있다.
       return new CoffeeMaker(coffeeBeans);
     }
 

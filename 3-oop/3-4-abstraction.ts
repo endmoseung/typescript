@@ -9,7 +9,20 @@
   // private 외부에서 접근치 않도록한다.
   // protected 외부에서 접근이 불가능하지만 상속받는 자녀들에게서는 가능하다.
 
-  class CoffeeMaker {
+  interface CoffeeMaker {
+    //이런행동이 가능, 계약서같은것
+    makeCoffee(shots: number): CoffeeCup;
+  }
+
+  interface CommercialCoffeeMaker {
+    //이런행동이 가능, 계약서같은것
+    makeCoffee(shots: number): CoffeeCup;
+    fillCoffeeBeans(beans: number): void;
+    clean(): void;
+  }
+
+  class CoffeeMachine implements CoffeeMaker, CommercialCoffeeMaker {
+    //coffeemachine은 coffeemaker의 규격을 따라야된다.
     private static BEANS_GRAM_PER_SHOT: number = 7;
     private coffeeBeans: number = 0;
 
@@ -17,8 +30,8 @@
       this.coffeeBeans = coffeeBeans;
     }
 
-    static makeMachine(coffeeBeans: number): CoffeeMaker {
-      return new CoffeeMaker(coffeeBeans);
+    static makeMachine(coffeeBeans: number): CoffeeMachine {
+      return new CoffeeMachine(coffeeBeans);
     }
 
     fillCoffeeBeans(beans: number) {
@@ -28,22 +41,38 @@
       }
       this.coffeeBeans += beans;
     }
-    grindBean(shots: number) {
-      console.log(`grinding beans for ${shots}`);
-      if (this.coffeeBeans < shots * CoffeeMaker.BEANS_GRAM_PER_SHOT) {
-        throw new Error("not enough coffee beans!");
-      }
-      this.coffeeBeans -= shots * CoffeeMaker.BEANS_GRAM_PER_SHOT;
+
+    clean() {
+      console.log("cleaning the machine");
     }
 
+    private grindBean(shots: number) {
+      console.log(`grinding beans for ${shots}`);
+      if (this.coffeeBeans < shots * CoffeeMachine.BEANS_GRAM_PER_SHOT) {
+        throw new Error("not enough coffee beans!");
+      }
+      this.coffeeBeans -= shots * CoffeeMachine.BEANS_GRAM_PER_SHOT;
+    }
+
+    private preHeat(): void {
+      console.log("heating up... 🔥");
+    }
+
+    private extract(shots: number): CoffeeCup {
+      console.log(`pulling ${shots}... ☕️`);
+      return {
+        shots,
+        hasMilk: false,
+      };
+    }
     makeCoffee(shots: number): CoffeeCup {
       this.grindBean(shots);
       this.preHeat();
       return this.extract(shots);
-      // if (this.coffeeBeans < shots * CoffeeMaker.BEANS_GRAM_PER_SHOT) {
+      // if (this.coffeeBeans < shots * CoffeeMachine.BEANS_GRAM_PER_SHOT) {
       //   throw new Error("not enough coffee beans!");
       // }
-      // this.coffeeBeans -= shots * CoffeeMaker.BEANS_GRAM_PER_SHOT;
+      // this.coffeeBeans -= shots * CoffeeMachine.BEANS_GRAM_PER_SHOT;
       // return {
       //   shots,
       //   hasMilk: false,
@@ -51,7 +80,36 @@
     }
   }
 
-  const maker = CoffeeMaker.makeMachine(70);
+  const maker: CoffeeMachine = CoffeeMachine.makeMachine(70);
   maker.fillCoffeeBeans(32);
   console.log(maker);
+  //추상화는 private으로 정보를 은닉함으로써도 가능하다. 위의 grindbean,preheat,extract함수앞에 private붙이기
+  const maker2: CoffeeMaker = CoffeeMachine.makeMachine(70);
+  maker2.fillCoffeeBeans(32); //이건 규격에 없기 때문에 불가능
+  maker2.makeCoffee(2);
+  console.log(maker);
+  const maker3: CommercialCoffeeMaker = CoffeeMachine.makeMachine(40);
+  maker3.fillCoffeeBeans(32); //이건 규격에 없기 때문에 불가능
+  maker3.makeCoffee(2);
+  maker3.clean();
+
+  class AmateurUser {
+    constructor(private machine: CoffeeMaker) {}
+    makeCoffee() {
+      const coffee = this.machine.makeCoffee(2);
+      console.log(coffee);
+    }
+  }
+  class ProBarista {
+    constructor(private machine: CommercialCoffeeMaker) {}
+    makeCoffee() {
+      const coffee = this.machine.makeCoffee(2);
+      console.log(coffee);
+      this.machine.fillCoffeeBeans(100);
+      this.machine.clean();
+    }
+  }
+  const amateur = new AmateurUser(maker);
+  const pro = new ProBarista(maker);
+  amateur.makeCoffee(2);
 }
