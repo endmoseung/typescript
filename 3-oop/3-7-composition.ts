@@ -1,6 +1,6 @@
 {
   //상속의 문제점 : 타입스크립트에서는 한가지 이상의 부모를 상속할수 없다. 상속이 복잡해진다. 그래서 composition을 사용한다.
-  //composition(구성요소들)
+  //composition(구성요소들) : composition으로 외부에 기능 class를 만들어서 그걸 끌어다 사용이 가능하다.
   type CoffeeCup = {
     shots: number;
     hasMilk: boolean;
@@ -77,42 +77,51 @@
   }
 
   //설탕 제조기
+  class AutoSugarMixer {
+    private getSugar(){
+      console.log("getting some sugar from jar...");
+      return true;
+    }
+
+    addSugar(cup: CoffeeCup): CoffeeCup {
+      const sugar = this.getSugar();
+      return {
+        ...cup,
+        hasSugar: sugar,
+      };
+    }
+  }
 
   class CafeLatteMachine extends CoffeeMachine {
-    constructor(beans: number, public serialNumber: string) {
-      //자식에서 constructor를 생성하고 싶을때는 super로 항상 부모를 호출해줘야 한다.
-      //public을 붙여준 이유는 이러면 위에 데이터에서 따로 선언 안해줘도돼서
-      super(beans); //인자도 꼭 부모에 있는 값을 받아오도록 해야한다.
+    constructor(beans: number, public serialNumber: string,private milkFrother: CheapMilkSteamer) {//dependency injection
+      super(beans);
     }
-    //다른클래스를 상속할때는 extends interface를 구현할떄는 implements
-    private steamMilk(): void {
-      console.log("steaming some milk... 🥛");
-    }
+
     makeCoffee(shots: number): CoffeeCup {
       const coffee = super.makeCoffee(shots); // 부모에 있는 함수를 그대로 쓰고싶을때
-      this.steamMilk();
-      return {
-        ...coffee, //부모에 있는 값은 그대로 가져오면서 hasmilk만 true로 바꿔주겠다.
-        hasMilk: true,
-      };
+      return this.milkFrother.makeMilk(coffee)
     }
   }
 
   class SweetCoffeeMaker extends CoffeeMachine {
-    getSugar() {
-      console.log("Getting some sugar...");
+    constructor(private beans:number, private sugar: AutoSugarMixer) {//dependency injection
+      super(beans);
     }
     makeCoffee(shots: number): CoffeeCup {
       const coffee = super.makeCoffee(shots);
-      this.getSugar();
-      return {
-        ...coffee,
-        hasSugar: true,
-      };
+      return this.sugar.addSugar(coffee);
     }
   }
 
-  class SweetCafeLatteMachine extends CoffeeMachine {}
+  class SweetCafeLatteMachine extends CoffeeMachine {
+    constructor(private beans:number, private sugar: AutoSugarMixer,private milkFrother : CheapMilkSteamer) {
+      super(beans);
+    }
+    makeCoffee(shots: number):CoffeeCup {
+      const coffee = super.makeCoffee(shots);
+      return this.milkFrother.makeMilk(this.sugar.addSugar(coffee));// 커피에 설탕을 먼저넣고 그뒤에 우유를 다시 넣겠다.
+    }
+  }
 
   const machines: CoffeeMaker[] = [
     //coffeemachine은 coffeemaker라는 interface를 받아오고 나머지애들은 coffeemachine을 상속하므로 나머지애들도 coffeemaker를 받아온다.

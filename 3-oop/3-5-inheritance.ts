@@ -1,4 +1,4 @@
-{
+{//상속을 잘 이용하면 공통적인건 그대로 사용하면서 자식클래스에서만 특화된 기능을 추가할 수 있다. super를 통해서 부모클래스를 호출할수도 있다.
   type CoffeeCup = {
     shots: number;
     hasMilk: boolean;
@@ -60,6 +60,10 @@
   }
 
   class CafeLatteMachine extends CoffeeMachine {
+    constructor(beans:number, public serialNumber:string){//자식에서 constructor를 생성하고 싶을때는 super로 항상 부모를 호출해줘야 한다.
+      //public을 붙여준 이유는 이러면 위에 데이터에서 따로 선언 안해줘도돼서
+      super(beans);//인자도 꼭 부모에 있는 값을 받아오도록 해야한다.
+    }
     //다른클래스를 상속할때는 extends interface를 구현할떄는 implements
     private steamMilk(): void {
       console.log("steaming some milk... 🥛");
@@ -73,8 +77,8 @@
       };
     }
   }
-  const machine = new CoffeeMachine(22);
-  const latteMachine = new CafeLatteMachine(40);
+  const machine = new CoffeeMachine(22);  
+  const latteMachine = new CafeLatteMachine(40,"advagqgqg");
   const coffee = latteMachine.makeCoffee(1);
   console.log(coffee);
 }

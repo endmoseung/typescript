@@ -2,7 +2,7 @@
   //다형성 한가지 interface나 동일한 부모를 상속했을떄 동일한 함수를 클래스구분없이 공통된 api를 호출할수 있다.
   type CoffeeCup = {
     shots: number;
-    hasMilk: boolean;
+    hasMilk?: boolean;
     hasSugar?: boolean; //있을수도있고 없을수도 있다
   };
 
@@ -11,17 +11,14 @@
     makeCoffee(shots: number): CoffeeCup;
   }
 
-  class CoffeeMachine implements CoffeeMaker {
+  abstract class CoffeeMachine implements CoffeeMaker {
+    //이자체로는 object를 만들 수 없다.
     //coffeemachine은 coffeemaker의 규격을 따라야된다.
     private static BEANS_GRAM_PER_SHOT: number = 7;
     private coffeeBeans: number = 0;
 
     public constructor(coffeeBeans: number) {
       this.coffeeBeans = coffeeBeans;
-    }
-
-    static makeMachine(coffeeBeans: number): CoffeeMachine {
-      return new CoffeeMachine(coffeeBeans);
     }
 
     fillCoffeeBeans(beans: number) {
@@ -47,13 +44,7 @@
       console.log("heating up... 🔥");
     }
 
-    private extract(shots: number): CoffeeCup {
-      console.log(`pulling ${shots}... ☕️`);
-      return {
-        shots,
-        hasMilk: false,
-      };
-    }
+    protected abstract extract(shots: number): CoffeeCup; //자식의 행동이 바뀔수있느 함수에 대해서 abstract 선언해준다. 바뀔수 있는 요소는 작성1도안한다.
     makeCoffee(shots: number): CoffeeCup {
       this.grindBean(shots);
       this.preHeat();
@@ -71,25 +62,20 @@
     private steamMilk(): void {
       console.log("steaming some milk... 🥛");
     }
-    makeCoffee(shots: number): CoffeeCup {
-      const coffee = super.makeCoffee(shots); // 부모에 있는 함수를 그대로 쓰고싶을때
+
+    protected extract(shots: number): CoffeeCup {
       this.steamMilk();
       return {
-        ...coffee, //부모에 있는 값은 그대로 가져오면서 hasmilk만 true로 바꿔주겠다.
+        shots,
         hasMilk: true,
       };
     }
   }
 
   class SweetCoffeeMaker extends CoffeeMachine {
-    private addSugar(): void {
-      console.log("sugar is mixing...");
-    }
-    makeCoffee(shots: number): CoffeeCup {
-      const coffee = super.makeCoffee(shots);
-      this.addSugar();
+    protected extract(shots: number): CoffeeCup {
       return {
-        ...coffee,
+        shots,
         hasSugar: true,
       };
     }
@@ -97,10 +83,8 @@
 
   const machines: CoffeeMaker[] = [
     //coffeemachine은 coffeemaker라는 interface를 받아오고 나머지애들은 coffeemachine을 상속하므로 나머지애들도 coffeemaker를 받아온다.
-    new CoffeeMachine(16),
     new CafeLatteMachine(16, "agagg"),
     new SweetCoffeeMaker(16),
-    new CoffeeMachine(16),
     new CafeLatteMachine(16, "agagg"),
     new SweetCoffeeMaker(16),
   ];
