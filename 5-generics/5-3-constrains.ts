@@ -51,6 +51,6 @@ function getValue<O, K extends keyof O>(object: O, key: K): O[K] {
   return object[key];
 }
 
-console.log(getValue(obj, "name"));
+console.log(getValue(obj, "name")); //두번쨰 인자로 전달되는건 첫번쨰인자의 obj안에 들어있는 key들중 하나다.
 console.log(getValue(obj, "age"));
 console.log(getValue(obj2, "nickname"));

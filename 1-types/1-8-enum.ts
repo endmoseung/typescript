@@ -26,7 +26,11 @@
   let day: Day = "Monday";
   day = "aad"; // 엉뚱한 아이가 나올 수 없다. 오류가떠서 왼쪽처럼
 
-  function test(test: string): string {
+  function test1(test: string): void {
+    console.log(test);
+  }
+
+  function test2(test: string) {
     console.log(test);
   }
 }

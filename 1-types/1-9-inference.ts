@@ -14,7 +14,7 @@
   print(1); // string이라서 안됨
   print("adad");
 
-  function add(x: number, y: number): number {
+  function add(x: number, y: number) {
     // 함수뒤에 :number를 붙여주지 않아도 넘버끼리의 합이므로 number일것이라 추론해준다.
     return x + y;
   }

@@ -64,6 +64,7 @@
     }
 
     protected extract(shots: number): CoffeeCup {
+      //부모의 abstract된것만 선언해줄 수 잇다.
       this.steamMilk();
       return {
         shots,

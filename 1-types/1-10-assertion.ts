@@ -13,7 +13,7 @@
   //하지만 위처럼 as 로 assertion을 해주면 length와같은 api들을 사용할 수 있다.
 
   const wrong: any = 5;
-  // console.log((wrong as Array<number>).push(1)); // 이런식으로 하면 파일이 죽어버린다.
+  console.log((wrong as Array<number>).push(1)); // 이런식으로 하면 파일이 죽어버린다.
 
   function findNumbers(): number[] | undefined {
     return undefined;
@@ -22,6 +22,6 @@
   numbers?.push();
   numbers!.push(); //무조건 어떤 타입이라고 가정하고 쓸수잇다
 
-  // const button = document.querySelector("class")!; // 정말 장담할수 있을떄 !를 사용해서 선언해줄 수 있다.
-  // button?.nodeValue;
+  const button = document.querySelector("class")!; // 정말 장담할수 있을떄 !를 사용해서 선언해줄 수 있다.
+  button?.nodeValue;
 }

@@ -1,5 +1,6 @@
 {
   interface Stack<V> {
+    // generic을 사용할떄는 받는 모든곳뒤에 Generic을 선언해줘야한다.
     readonly size: number;
     push(value: V): void;
     pop(): V;
