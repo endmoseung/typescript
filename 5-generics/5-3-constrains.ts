@@ -42,6 +42,8 @@ const obj = {
   age: 26,
 };
 
+type adad = {};
+
 const obj2 = {
   nickname: "graymon",
 };

@@ -14,6 +14,7 @@
     }
     return arg;
   }
+  const bad = checkNotNullAny("agag");
   const result = checkNotNull(123);
   console.log(result);
 
@@ -24,6 +25,7 @@
     }
     return arg;
   }
+  const god: string = checkNotNull("faf");
   const number = checkNotNullGeneric(1313);
   const string: string = checkNotNullGeneric("adad");
   const boolean = checkNotNullGeneric(true);

@@ -14,6 +14,7 @@ class SimpleEither<L, R> implements Either<L, R> {
   }
 }
 
-const either = new SimpleEither(4, 5);
+const either = new SimpleEither("I love", "Typescript");
 either.left();
 either.right();
+console.log(either.left(), either.right());
