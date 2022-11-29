@@ -16,7 +16,7 @@
     return {
       result: "success",
       response: {
-        body: "logged in!",
+        body: "good",
       },
     };
   }

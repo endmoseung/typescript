@@ -17,12 +17,15 @@
     Friday,
     Saturday,
     Sunday,
-  }
+  } //네이티브앱으로 개발할때는 union을 표시할 물리적인 방법이 없기떄문에 enum을 써야된다.
   let days: Days = Days.Monday;
   days = Days.Tuesday;
-  days = 10; // 정확한 타입추론이 어렵다
+  days = 10; // 타입보장이 힘들다.
   console.log(Days.Monday, Days.Sunday);
 
+  type DayOfWeek = "Monday" | "Tuesday" | "Wednesday"; // 이처럼 Enum대신 Union(Or)타입으로 대체가 가능하기떄문에 Union을 권장한다.
+  let dayOfWeek: DayOfWeek = "Monday";
+  dayOfWeek = "Monday";
   let day: Day = "Monday";
   day = "aad"; // 엉뚱한 아이가 나올 수 없다. 오류가떠서 왼쪽처럼
 

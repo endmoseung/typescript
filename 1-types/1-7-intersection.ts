@@ -4,6 +4,7 @@
   type Student = {
     name: string;
     score: number;
+    age: number;
   };
 
   type Worker = {
@@ -20,5 +21,6 @@
     score: 100,
     employeeid: 27,
     work: () => {},
+    age: 3,
   });
 }

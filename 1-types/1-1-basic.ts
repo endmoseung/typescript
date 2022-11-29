@@ -32,4 +32,15 @@
   }
 
   // never
+
+  const errorHandling = (message: string): never => {
+    throw new Error(message);
+  };
+
+  let obj: object;
+  function adad(input: object) {}
+
+  adad([1, 2, 3]);
+  adad({ he: "good" });
+  adad(() => console.log("good"));
 }

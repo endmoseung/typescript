@@ -6,6 +6,9 @@
   }
   move("down");
 
+  type testing = string | number | boolean;
+  const testings = "ab" || true || 123;
+
   type TileSize = 8 | 16 | 32;
   const tile: TileSize = 8;
 
@@ -19,7 +22,7 @@
   };
 
   type LoginState = SuccessState | FailState;
-  function login(): LoginState {
+  function login(state: object): LoginState {
     //로그인함수 옆에 직접적으로 선언하는게 아니라 하나의 state으로 관리하는게 더좋다.
     return {
       response: {
@@ -27,11 +30,14 @@
       },
     };
   }
-  function printLoginState(state: LoginState) {
-    if ("response" in state) {
-      console.log(`Good ${state.response.body}`);
-    } else {
-      console.log(`Bad ${state.reason}`);
+
+  function printLoginsState(loginState: LoginState) {
+    //api받아올떄 이런식으로 사용하면 좋을듯
+    if ("response" in loginState) {
+      console.log("성공이용");
+    }
+    if ("reason" in loginState) {
+      console.log("실팬데용");
     }
   }
 }
