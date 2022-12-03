@@ -20,4 +20,7 @@
   const json: Json = "json";
   type One = 1;
   const one: One = 1;
+  const abc = 2;
+  type boal = true;
+  const a:boal = true;
 }
